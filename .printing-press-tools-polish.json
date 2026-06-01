@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-06-01T06:21:44.393719196Z",
+  "cli_dir": "\u003ccli-dir\u003e/peekaping-pp-cli",
+  "findings": [
+    {
+      "kind": "thin-short",
+      "command": "version",
+      "file": "root.go",
+      "line": 331,
+      "evidence": "Print version",
+      "status": "accepted",
+      "note": "Standard framework 'version' command; 'Print version' is accurate and complete. Agents understand this without elaboration."
+    }
+  ]
+}

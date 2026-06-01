@@ -1,0 +1,16 @@
+# agentcookie.toml: secrets-bus adoption manifest v2
+# See docs/spec-agentcookie-secrets-bus-v2-adoption.md
+schema_version = 2
+name = "peekaping-pp-cli"
+display_name = "Peekaping"
+description = "The first CLI for Peekaping: full monitor CRUD plus offline down/flapping/uptime analytics no single API call can answer."
+project_kind = "cli"
+
+[secrets.file]
+path = "~/.config/peekaping-pp-cli/config.toml"
+
+[sync]
+default = false
+
+[sync.keys]
+PEEKAPING_API_KEY = true

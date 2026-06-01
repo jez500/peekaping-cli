@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-01T06:28:58.187646862Z",
+  "printing_press_version": "4.19.1",
+  "api_name": "peekaping",
+  "display_name": "Peekaping",
+  "cli_name": "peekaping-pp-cli",
+  "creator": {
+    "name": "Jeremy"
+  },
+  "printer_name": "Jeremy",
+  "spec_path": "peekaping-spec-corrected.json",
+  "spec_format": "openapi3",
+  "spec_checksum": "sha256:d4a421da5086259cc1dd9ef4d45e5fa178c1e1982e461d94213b374e05ce4272",
+  "run_id": "20260601-152846",
+  "category": "monitoring",
+  "description": "The first CLI for Peekaping: full monitor CRUD plus offline down/flapping/uptime analytics no single API call can answer.",
+  "mcp_binary": "peekaping-pp-mcp",
+  "mcp_tool_count": 71,
+  "mcp_ready": "full",
+  "api_version": "0.0.46",
+  "auth_type": "api_key",
+  "auth_env_vars": [
+    "PEEKAPING_API_KEY"
+  ],
+  "novel_features": [
+    {
+      "name": "Down services",
+      "command": "down",
+      "description": "List every monitor that is currently down, each enriched with its latest failure message and ping."
+    },
+    {
+      "name": "Flapping detection",
+      "command": "flapping",
+      "description": "Rank monitors by how often they flip state (up/down) over a window, surfacing the noisiest services."
+    },
+    {
+      "name": "Worst uptime / SLO breach",
+      "command": "worst-uptime",
+      "description": "Rank the whole fleet by uptime percentage for a window, or filter to monitors below an SLO target."
+    },
+    {
+      "name": "Cert expiry",
+      "command": "certs",
+      "description": "List TLS certificates expiring within a window across all HTTP monitors, sorted by days remaining."
+    },
+    {
+      "name": "Incident timeline",
+      "command": "incidents",
+      "description": "A chronological log of state-change events across monitors, or one monitor's recent failures."
+    },
+    {
+      "name": "Tag-level reliability",
+      "command": "tag-health",
+      "description": "Roll up uptime and down counts grouped by tag, e.g. prod vs staging."
+    }
+  ]
+}

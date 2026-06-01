@@ -1,0 +1,2397 @@
+{
+  "api_name": "peekaping",
+  "base_url": "http://localhost:8383/api/v1",
+  "description": "The first CLI for Peekaping: full monitor CRUD plus offline down/flapping/uptime analytics no single API call can answer.",
+  "mcp_ready": "full",
+  "http_transport": "standard",
+  "mcp": {
+    "endpoint_tools": "hidden",
+    "orchestration": "code"
+  },
+  "auth": {
+    "type": "api_key",
+    "header": "X-API-Key",
+    "in": "header",
+    "env_vars": [
+      "PEEKAPING_API_KEY"
+    ],
+    "env_var_specs": [
+      {
+        "name": "PEEKAPING_API_KEY",
+        "kind": "per_call",
+        "required": true,
+        "sensitive": true,
+        "inferred": true
+      }
+    ]
+  },
+  "required_headers": [],
+  "tools": [
+    {
+      "name": "api-keys_create",
+      "description": "Create a new API key. Required: name. Optional: expires_at, max_usage_count. Returns the new UtilsApiResponseApiKeyApikeyWithTokenResponse.",
+      "method": "POST",
+      "path": "/api-keys",
+      "params": [
+        {
+          "name": "expires_at",
+          "type": "string",
+          "location": "body",
+          "description": "Expires at"
+        },
+        {
+          "name": "max_usage_count",
+          "type": "int",
+          "location": "body",
+          "description": "Max usage count"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "api-keys_delete",
+      "description": "Delete an API key. Required: id. Destructive.",
+      "method": "DELETE",
+      "path": "/api-keys/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "API key ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "api-keys_get",
+      "description": "Get a specific API key by ID. Required: id. Returns the UtilsApiResponseApiKeyApikeyResponse.",
+      "method": "GET",
+      "path": "/api-keys/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "API key ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "api-keys_list",
+      "description": "Get all API keys. Returns array of ApiKeyApikeyResponse.",
+      "method": "GET",
+      "path": "/api-keys",
+      "params": []
+    },
+    {
+      "name": "api-keys_list-apikeys",
+      "description": "Get API key configuration including prefix. Returns the UtilsApiResponseApiKeyApikeyConfigResponse.",
+      "method": "GET",
+      "path": "/api-keys/config",
+      "params": []
+    },
+    {
+      "name": "api-keys_update",
+      "description": "Update an API key. Required: id. Optional: expires_at, max_usage_count, name. Returns the updated UtilsApiResponseApiKeyApikeyResponse.",
+      "method": "PUT",
+      "path": "/api-keys/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "API key ID",
+          "required": true
+        },
+        {
+          "name": "expires_at",
+          "type": "string",
+          "location": "body",
+          "description": "Expires at"
+        },
+        {
+          "name": "max_usage_count",
+          "type": "int",
+          "location": "body",
+          "description": "Max usage count"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name"
+        }
+      ]
+    },
+    {
+      "name": "badge_cert-exp_get",
+      "description": "Get certificate expiry badge. Required: monitorId. Optional: style, label, warnDays (plus 1 more).",
+      "method": "GET",
+      "path": "/badge/{monitorId}/cert-exp",
+      "params": [
+        {
+          "name": "monitorId",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "location": "query",
+          "description": "Badge style"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "location": "query",
+          "description": "Custom label"
+        },
+        {
+          "name": "warnDays",
+          "type": "int",
+          "location": "query",
+          "description": "Days before expiry to show warning"
+        },
+        {
+          "name": "downDays",
+          "type": "int",
+          "location": "query",
+          "description": "Days before expiry to show as down"
+        }
+      ]
+    },
+    {
+      "name": "badge_ping_get",
+      "description": "Get ping badge. Required: monitorId, duration. Optional: style, label, suffix (plus 1 more).",
+      "method": "GET",
+      "path": "/badge/{monitorId}/ping/{duration}",
+      "params": [
+        {
+          "name": "monitorId",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "duration",
+          "type": "int",
+          "location": "path",
+          "description": "Duration in hours",
+          "required": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "location": "query",
+          "description": "Badge style"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "location": "query",
+          "description": "Custom label"
+        },
+        {
+          "name": "suffix",
+          "type": "string",
+          "location": "query",
+          "description": "Value suffix"
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "location": "query",
+          "description": "Badge color"
+        }
+      ]
+    },
+    {
+      "name": "badge_response_get",
+      "description": "Get response time badge. Required: monitorId. Optional: style, label, suffix (plus 1 more).",
+      "method": "GET",
+      "path": "/badge/{monitorId}/response",
+      "params": [
+        {
+          "name": "monitorId",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "location": "query",
+          "description": "Badge style"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "location": "query",
+          "description": "Custom label"
+        },
+        {
+          "name": "suffix",
+          "type": "string",
+          "location": "query",
+          "description": "Value suffix"
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "location": "query",
+          "description": "Badge color"
+        }
+      ]
+    },
+    {
+      "name": "badge_status_get",
+      "description": "Get status badge. Required: monitorId. Optional: style, upLabel, downLabel (plus 2 more).",
+      "method": "GET",
+      "path": "/badge/{monitorId}/status",
+      "params": [
+        {
+          "name": "monitorId",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "location": "query",
+          "description": "Badge style (flat, flat-square, plastic, for-the-badge, social)"
+        },
+        {
+          "name": "upLabel",
+          "type": "string",
+          "location": "query",
+          "description": "Label when monitor is up"
+        },
+        {
+          "name": "downLabel",
+          "type": "string",
+          "location": "query",
+          "description": "Label when monitor is down"
+        },
+        {
+          "name": "upColor",
+          "type": "string",
+          "location": "query",
+          "description": "Color when monitor is up"
+        },
+        {
+          "name": "downColor",
+          "type": "string",
+          "location": "query",
+          "description": "Color when monitor is down"
+        }
+      ]
+    },
+    {
+      "name": "badge_uptime_get",
+      "description": "Get uptime badge. Required: monitorId, duration. Optional: style, label, suffix (plus 1 more).",
+      "method": "GET",
+      "path": "/badge/{monitorId}/uptime/{duration}",
+      "params": [
+        {
+          "name": "monitorId",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "duration",
+          "type": "int",
+          "location": "path",
+          "description": "Duration in hours (24, 720, 2160)",
+          "required": true
+        },
+        {
+          "name": "style",
+          "type": "string",
+          "location": "query",
+          "description": "Badge style"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "location": "query",
+          "description": "Custom label"
+        },
+        {
+          "name": "suffix",
+          "type": "string",
+          "location": "query",
+          "description": "Value suffix"
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "location": "query",
+          "description": "Badge color"
+        }
+      ]
+    },
+    {
+      "name": "health_list",
+      "description": "Returns the current server health.",
+      "method": "GET",
+      "path": "/health",
+      "params": []
+    },
+    {
+      "name": "maintenances_create",
+      "description": "Create maintenance. Required: strategy, title. Optional: active, cron, days_of_month (plus 10 more). Returns the new UtilsApiResponseMaintenanceModel.",
+      "method": "POST",
+      "path": "/maintenances",
+      "params": [
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "cron",
+          "type": "string",
+          "location": "body",
+          "description": "Cron"
+        },
+        {
+          "name": "days_of_month",
+          "type": "array",
+          "location": "body",
+          "description": "Days of month"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "duration",
+          "type": "int",
+          "location": "body",
+          "description": "Duration"
+        },
+        {
+          "name": "end_date_time",
+          "type": "string",
+          "location": "body",
+          "description": "End date time"
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "location": "body",
+          "description": "End time"
+        },
+        {
+          "name": "interval_day",
+          "type": "int",
+          "location": "body",
+          "description": "Interval day"
+        },
+        {
+          "name": "monitor_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Monitor ids"
+        },
+        {
+          "name": "start_date_time",
+          "type": "string",
+          "location": "body",
+          "description": "Start date time"
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "location": "body",
+          "description": "Start time"
+        },
+        {
+          "name": "strategy",
+          "type": "string",
+          "location": "body",
+          "description": "Strategy",
+          "required": true
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "location": "body",
+          "description": "Timezone"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "location": "body",
+          "description": "Title",
+          "required": true
+        },
+        {
+          "name": "weekdays",
+          "type": "array",
+          "location": "body",
+          "description": "Weekdays"
+        }
+      ]
+    },
+    {
+      "name": "maintenances_delete",
+      "description": "Delete maintenance. Required: id. Returns the UtilsApiResponseAny. Destructive.",
+      "method": "DELETE",
+      "path": "/maintenances/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Maintenance ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "maintenances_get",
+      "description": "Get maintenance by ID. Required: id. Returns the UtilsApiResponseMaintenanceMaintenanceResponseDto.",
+      "method": "GET",
+      "path": "/maintenances/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Maintenance ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "maintenances_list",
+      "description": "Get maintenances. Optional: q, strategy, page (default: 0) (plus 1 more). Returns array of MaintenanceModel.",
+      "method": "GET",
+      "path": "/maintenances",
+      "params": [
+        {
+          "name": "q",
+          "type": "string",
+          "location": "query",
+          "description": "Search query"
+        },
+        {
+          "name": "strategy",
+          "type": "string",
+          "location": "query",
+          "description": "Filter by strategy"
+        },
+        {
+          "name": "page",
+          "type": "int",
+          "location": "query",
+          "description": "Page number"
+        },
+        {
+          "name": "limit",
+          "type": "int",
+          "location": "query",
+          "description": "Items per page"
+        }
+      ]
+    },
+    {
+      "name": "maintenances_update",
+      "description": "Update maintenance. Required: id. Optional: active, cron, days_of_month (plus 12 more). Returns the updated UtilsApiResponseMaintenanceModel.",
+      "method": "PATCH",
+      "path": "/maintenances/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Maintenance ID",
+          "required": true
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "cron",
+          "type": "string",
+          "location": "body",
+          "description": "Cron"
+        },
+        {
+          "name": "days_of_month",
+          "type": "array",
+          "location": "body",
+          "description": "Days of month"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "duration",
+          "type": "int",
+          "location": "body",
+          "description": "Duration"
+        },
+        {
+          "name": "end_date_time",
+          "type": "string",
+          "location": "body",
+          "description": "End date time"
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "location": "body",
+          "description": "End time"
+        },
+        {
+          "name": "interval_day",
+          "type": "int",
+          "location": "body",
+          "description": "Interval day"
+        },
+        {
+          "name": "monitor_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Monitor ids"
+        },
+        {
+          "name": "start_date_time",
+          "type": "string",
+          "location": "body",
+          "description": "Start date time"
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "location": "body",
+          "description": "Start time"
+        },
+        {
+          "name": "strategy",
+          "type": "string",
+          "location": "body",
+          "description": "Strategy"
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "location": "body",
+          "description": "Timezone"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "location": "body",
+          "description": "Title"
+        },
+        {
+          "name": "weekdays",
+          "type": "array",
+          "location": "body",
+          "description": "Weekdays"
+        }
+      ]
+    },
+    {
+      "name": "maintenances_update-id",
+      "description": "Update maintenance. Required: id, strategy, title. Optional: active, cron, days_of_month (plus 10 more). Returns the updated UtilsApiResponseMaintenanceModel.",
+      "method": "PUT",
+      "path": "/maintenances/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Maintenance ID",
+          "required": true
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "cron",
+          "type": "string",
+          "location": "body",
+          "description": "Cron"
+        },
+        {
+          "name": "days_of_month",
+          "type": "array",
+          "location": "body",
+          "description": "Days of month"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "duration",
+          "type": "int",
+          "location": "body",
+          "description": "Duration"
+        },
+        {
+          "name": "end_date_time",
+          "type": "string",
+          "location": "body",
+          "description": "End date time"
+        },
+        {
+          "name": "end_time",
+          "type": "string",
+          "location": "body",
+          "description": "End time"
+        },
+        {
+          "name": "interval_day",
+          "type": "int",
+          "location": "body",
+          "description": "Interval day"
+        },
+        {
+          "name": "monitor_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Monitor ids"
+        },
+        {
+          "name": "start_date_time",
+          "type": "string",
+          "location": "body",
+          "description": "Start date time"
+        },
+        {
+          "name": "start_time",
+          "type": "string",
+          "location": "body",
+          "description": "Start time"
+        },
+        {
+          "name": "strategy",
+          "type": "string",
+          "location": "body",
+          "description": "Strategy",
+          "required": true
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "location": "body",
+          "description": "Timezone"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "location": "body",
+          "description": "Title",
+          "required": true
+        },
+        {
+          "name": "weekdays",
+          "type": "array",
+          "location": "body",
+          "description": "Weekdays"
+        }
+      ]
+    },
+    {
+      "name": "maintenances_pause_update",
+      "description": "Pause maintenance. Required: id. Returns the updated UtilsApiResponseMaintenanceModel.",
+      "method": "PATCH",
+      "path": "/maintenances/{id}/pause",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Maintenance ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "maintenances_resume_update",
+      "description": "Resume maintenance. Required: id. Returns the updated UtilsApiResponseMaintenanceModel.",
+      "method": "PATCH",
+      "path": "/maintenances/{id}/resume",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Maintenance ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_create",
+      "description": "Create monitor. Required: name, notification_ids, type. Optional: active, config, interval (plus 7 more). Returns the new UtilsApiResponseMonitorModel.",
+      "method": "POST",
+      "path": "/monitors",
+      "params": [
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "location": "body",
+          "description": "Config"
+        },
+        {
+          "name": "interval",
+          "type": "int",
+          "location": "body",
+          "description": "Interval"
+        },
+        {
+          "name": "max_retries",
+          "type": "int",
+          "location": "body",
+          "description": "Max retries"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name",
+          "required": true
+        },
+        {
+          "name": "notification_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Notification ids",
+          "required": true
+        },
+        {
+          "name": "proxy_id",
+          "type": "string",
+          "location": "body",
+          "description": "Proxy id"
+        },
+        {
+          "name": "push_token",
+          "type": "string",
+          "location": "body",
+          "description": "Push token"
+        },
+        {
+          "name": "resend_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Resend interval"
+        },
+        {
+          "name": "retry_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Retry interval"
+        },
+        {
+          "name": "tag_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Tag ids"
+        },
+        {
+          "name": "timeout",
+          "type": "int",
+          "location": "body",
+          "description": "Timeout"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_delete",
+      "description": "Delete monitor. Required: id. Returns the UtilsApiResponseAny. Destructive.",
+      "method": "DELETE",
+      "path": "/monitors/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_get",
+      "description": "Get monitor by ID. Required: id. Returns the UtilsApiResponseMonitorMonitorResponseDto.",
+      "method": "GET",
+      "path": "/monitors/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_list",
+      "description": "Get monitors. Optional: q, page (default: 0), limit (default: 10) (plus 3 more). Returns array of MonitorModel.",
+      "method": "GET",
+      "path": "/monitors",
+      "params": [
+        {
+          "name": "q",
+          "type": "string",
+          "location": "query",
+          "description": "Search query"
+        },
+        {
+          "name": "page",
+          "type": "int",
+          "location": "query",
+          "description": "Page number"
+        },
+        {
+          "name": "limit",
+          "type": "int",
+          "location": "query",
+          "description": "Items per page"
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "query",
+          "description": "Active status"
+        },
+        {
+          "name": "status",
+          "type": "int",
+          "location": "query",
+          "description": "Status"
+        },
+        {
+          "name": "tag_ids",
+          "type": "string",
+          "location": "query",
+          "description": "Comma-separated list of tag IDs to filter by"
+        }
+      ]
+    },
+    {
+      "name": "monitors_list-batch",
+      "description": "Get monitors by IDs. Required: ids. Returns array of MonitorModel.",
+      "method": "GET",
+      "path": "/monitors/batch",
+      "params": [
+        {
+          "name": "ids",
+          "type": "string",
+          "location": "query",
+          "description": "Comma-separated list of monitor IDs",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_update",
+      "description": "Update monitor. Required: id. Optional: active, config, interval (plus 11 more). Returns the updated UtilsApiResponseMonitorModel.",
+      "method": "PATCH",
+      "path": "/monitors/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "location": "body",
+          "description": "Config"
+        },
+        {
+          "name": "interval",
+          "type": "int",
+          "location": "body",
+          "description": "Interval"
+        },
+        {
+          "name": "max_retries",
+          "type": "int",
+          "location": "body",
+          "description": "Max retries"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name"
+        },
+        {
+          "name": "notification_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Notification ids"
+        },
+        {
+          "name": "proxy_id",
+          "type": "string",
+          "location": "body",
+          "description": "Proxy id"
+        },
+        {
+          "name": "push_token",
+          "type": "string",
+          "location": "body",
+          "description": "Push token"
+        },
+        {
+          "name": "resend_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Resend interval"
+        },
+        {
+          "name": "retry_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Retry interval"
+        },
+        {
+          "name": "status",
+          "type": "int",
+          "location": "body",
+          "description": "Status"
+        },
+        {
+          "name": "tag_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Tag ids"
+        },
+        {
+          "name": "timeout",
+          "type": "int",
+          "location": "body",
+          "description": "Timeout"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type"
+        }
+      ]
+    },
+    {
+      "name": "monitors_update-id",
+      "description": "Update monitor. Required: id, name, notification_ids, type. Optional: active, config, interval (plus 7 more). Returns the updated UtilsApiResponseMonitorModel.",
+      "method": "PUT",
+      "path": "/monitors/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "location": "body",
+          "description": "Config"
+        },
+        {
+          "name": "interval",
+          "type": "int",
+          "location": "body",
+          "description": "Interval"
+        },
+        {
+          "name": "max_retries",
+          "type": "int",
+          "location": "body",
+          "description": "Max retries"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name",
+          "required": true
+        },
+        {
+          "name": "notification_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Notification ids",
+          "required": true
+        },
+        {
+          "name": "proxy_id",
+          "type": "string",
+          "location": "body",
+          "description": "Proxy id"
+        },
+        {
+          "name": "push_token",
+          "type": "string",
+          "location": "body",
+          "description": "Push token"
+        },
+        {
+          "name": "resend_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Resend interval"
+        },
+        {
+          "name": "retry_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Retry interval"
+        },
+        {
+          "name": "tag_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Tag ids"
+        },
+        {
+          "name": "timeout",
+          "type": "int",
+          "location": "body",
+          "description": "Timeout"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_heartbeats_get",
+      "description": "Get paginated heartbeats for a monitor. Required: id. Optional: limit, page, important (plus 1 more). Returns array of HeartbeatModel.",
+      "method": "GET",
+      "path": "/monitors/{id}/heartbeats",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "limit",
+          "type": "int",
+          "location": "query",
+          "description": "Number of heartbeats per page (default 50)"
+        },
+        {
+          "name": "page",
+          "type": "int",
+          "location": "query",
+          "description": "Page number (default 0)"
+        },
+        {
+          "name": "important",
+          "type": "bool",
+          "location": "query",
+          "description": "Filter by important heartbeats only"
+        },
+        {
+          "name": "reverse",
+          "type": "bool",
+          "location": "query",
+          "description": "Reverse the order of heartbeats"
+        }
+      ]
+    },
+    {
+      "name": "monitors_reset_create",
+      "description": "Reset monitor data (heartbeats and stats). Required: id. Returns the new UtilsApiResponseAny.",
+      "method": "POST",
+      "path": "/monitors/{id}/reset",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_stats_get",
+      "description": "Get monitor stat points (ping/up/down) from stats tables. Required: id, since. Optional: until, granularity. Returns the UtilsApiResponseMonitorStatPointsSummaryDto.",
+      "method": "GET",
+      "path": "/monitors/{id}/stats/points",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        },
+        {
+          "name": "since",
+          "type": "string",
+          "location": "query",
+          "description": "Start time (RFC3339)",
+          "required": true
+        },
+        {
+          "name": "until",
+          "type": "string",
+          "location": "query",
+          "description": "End time (RFC3339, default now)"
+        },
+        {
+          "name": "granularity",
+          "type": "string",
+          "location": "query",
+          "description": "Granularity (minute, hour, day)"
+        }
+      ]
+    },
+    {
+      "name": "monitors_stats_get-monitors",
+      "description": "Get monitor uptime stats (24h, 30d, 365d). Required: id. Returns the UtilsApiResponseMonitorCustomUptimeStatsDto.",
+      "method": "GET",
+      "path": "/monitors/{id}/stats/uptime",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "monitors_tls_get",
+      "description": "Get monitor TLS certificate information. Required: id. Returns the UtilsApiResponseAny.",
+      "method": "GET",
+      "path": "/monitors/{id}/tls",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Monitor ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "notification-channels_create",
+      "description": "Create notification channel. Optional: active, config, is_default (plus 2 more). Returns the new UtilsApiResponseNotificationChannelModel.",
+      "method": "POST",
+      "path": "/notification-channels",
+      "params": [
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "location": "body",
+          "description": "Config"
+        },
+        {
+          "name": "is_default",
+          "type": "bool",
+          "location": "body",
+          "description": "Is default"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type"
+        }
+      ]
+    },
+    {
+      "name": "notification-channels_create-notificationchannels",
+      "description": "Test notification channel. Optional: active, config, is_default (plus 2 more). Returns the new UtilsApiResponseAny.",
+      "method": "POST",
+      "path": "/notification-channels/test",
+      "params": [
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "location": "body",
+          "description": "Config"
+        },
+        {
+          "name": "is_default",
+          "type": "bool",
+          "location": "body",
+          "description": "Is default"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type"
+        }
+      ]
+    },
+    {
+      "name": "notification-channels_delete",
+      "description": "Delete notification channel. Required: id. Returns the UtilsApiResponseAny. Destructive.",
+      "method": "DELETE",
+      "path": "/notification-channels/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Notification ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "notification-channels_get",
+      "description": "Get notification channel by ID. Required: id. Returns the UtilsApiResponseNotificationChannelModel.",
+      "method": "GET",
+      "path": "/notification-channels/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Notification ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "notification-channels_list",
+      "description": "Get notification channels. Optional: q, page (default: 0), limit (default: 10). Returns array of NotificationChannelModel.",
+      "method": "GET",
+      "path": "/notification-channels",
+      "params": [
+        {
+          "name": "q",
+          "type": "string",
+          "location": "query",
+          "description": "Search query"
+        },
+        {
+          "name": "page",
+          "type": "int",
+          "location": "query",
+          "description": "Page number"
+        },
+        {
+          "name": "limit",
+          "type": "int",
+          "location": "query",
+          "description": "Items per page"
+        }
+      ]
+    },
+    {
+      "name": "notification-channels_update",
+      "description": "Update notification channel. Required: id. Optional: active, config, is_default (plus 2 more). Returns the updated UtilsApiResponseNotificationChannelModel.",
+      "method": "PATCH",
+      "path": "/notification-channels/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Notification ID",
+          "required": true
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "location": "body",
+          "description": "Config"
+        },
+        {
+          "name": "is_default",
+          "type": "bool",
+          "location": "body",
+          "description": "Is default"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type"
+        }
+      ]
+    },
+    {
+      "name": "notification-channels_update-notificationchannels",
+      "description": "Update notification channel. Required: id. Optional: active, config, is_default (plus 2 more). Returns the updated UtilsApiResponseNotificationChannelModel.",
+      "method": "PUT",
+      "path": "/notification-channels/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Notification ID",
+          "required": true
+        },
+        {
+          "name": "active",
+          "type": "bool",
+          "location": "body",
+          "description": "Active"
+        },
+        {
+          "name": "config",
+          "type": "string",
+          "location": "body",
+          "description": "Config"
+        },
+        {
+          "name": "is_default",
+          "type": "bool",
+          "location": "body",
+          "description": "Is default"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name"
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type"
+        }
+      ]
+    },
+    {
+      "name": "peekaping-auth_create",
+      "description": "Login admin. Required: email, password. Optional: token. Returns the new UtilsApiResponseAuthLoginResponse.",
+      "method": "POST",
+      "path": "/auth/login",
+      "params": [
+        {
+          "name": "email",
+          "type": "string",
+          "location": "body",
+          "description": "Email",
+          "required": true
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password",
+          "required": true
+        },
+        {
+          "name": "token",
+          "type": "string",
+          "location": "body",
+          "description": "Token"
+        }
+      ]
+    },
+    {
+      "name": "peekaping-auth_create-2fa",
+      "description": "Disable 2FA (TOTP) for user. Required: email, password. Returns the new UtilsApiResponseAny.",
+      "method": "POST",
+      "path": "/auth/2fa/disable",
+      "params": [
+        {
+          "name": "email",
+          "type": "string",
+          "location": "body",
+          "description": "Email",
+          "required": true
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "peekaping-auth_create-2fa-2",
+      "description": "Enable 2FA (TOTP) for user. Required: email, password. Returns the new AuthTwoFasetupResponseDto.",
+      "method": "POST",
+      "path": "/auth/2fa/setup",
+      "params": [
+        {
+          "name": "email",
+          "type": "string",
+          "location": "body",
+          "description": "Email",
+          "required": true
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "peekaping-auth_create-2fa-3",
+      "description": "Verify 2FA (TOTP) code for user. Required: code, email. Returns the new AuthTwoFaverifyResponseDto.",
+      "method": "POST",
+      "path": "/auth/2fa/verify",
+      "params": [
+        {
+          "name": "code",
+          "type": "string",
+          "location": "body",
+          "description": "Code",
+          "required": true
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "location": "body",
+          "description": "Email",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "peekaping-auth_create-refresh",
+      "description": "Refresh access token. Required: refreshToken. Returns the new UtilsApiResponseAuthLoginResponse.",
+      "method": "POST",
+      "path": "/auth/refresh",
+      "params": [
+        {
+          "name": "refreshToken",
+          "type": "string",
+          "location": "body",
+          "description": "Refresh token",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "peekaping-auth_create-register",
+      "description": "Register new admin. Required: email, password. Returns the new UtilsApiResponseAuthLoginResponse.",
+      "method": "POST",
+      "path": "/auth/register",
+      "params": [
+        {
+          "name": "email",
+          "type": "string",
+          "location": "body",
+          "description": "Email",
+          "required": true
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "peekaping-auth_update",
+      "description": "Update user password. Required: currentPassword, newPassword. Returns the updated UtilsApiResponseAny.",
+      "method": "PUT",
+      "path": "/auth/password",
+      "params": [
+        {
+          "name": "currentPassword",
+          "type": "string",
+          "location": "body",
+          "description": "Current password",
+          "required": true
+        },
+        {
+          "name": "newPassword",
+          "type": "string",
+          "location": "body",
+          "description": "New password",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "peekaping-version_list",
+      "description": "Returns the current server version.",
+      "method": "GET",
+      "path": "/version",
+      "params": []
+    },
+    {
+      "name": "proxies_create",
+      "description": "Create proxy. Required: host, port, protocol. Optional: auth, password, username. Returns the new UtilsApiResponseProxyModel.",
+      "method": "POST",
+      "path": "/proxies",
+      "params": [
+        {
+          "name": "auth",
+          "type": "bool",
+          "location": "body",
+          "description": "Auth"
+        },
+        {
+          "name": "host",
+          "type": "string",
+          "location": "body",
+          "description": "Host",
+          "required": true
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password"
+        },
+        {
+          "name": "port",
+          "type": "int",
+          "location": "body",
+          "description": "Port",
+          "required": true
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "location": "body",
+          "description": "Protocol",
+          "required": true
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "location": "body",
+          "description": "Username"
+        }
+      ]
+    },
+    {
+      "name": "proxies_delete",
+      "description": "Delete proxy. Required: id. Returns the UtilsApiResponseAny. Destructive.",
+      "method": "DELETE",
+      "path": "/proxies/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Proxy ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "proxies_get",
+      "description": "Get proxy by ID. Required: id. Returns the UtilsApiResponseProxyModel.",
+      "method": "GET",
+      "path": "/proxies/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Proxy ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "proxies_list",
+      "description": "Get proxies. Optional: q, page (default: 0), limit (default: 10). Returns array of ProxyModel.",
+      "method": "GET",
+      "path": "/proxies",
+      "params": [
+        {
+          "name": "q",
+          "type": "string",
+          "location": "query",
+          "description": "Search query"
+        },
+        {
+          "name": "page",
+          "type": "int",
+          "location": "query",
+          "description": "Page number"
+        },
+        {
+          "name": "limit",
+          "type": "int",
+          "location": "query",
+          "description": "Items per page"
+        }
+      ]
+    },
+    {
+      "name": "proxies_update",
+      "description": "Update proxy. Required: id. Optional: auth, host, password (plus 3 more). Returns the updated UtilsApiResponseProxyModel.",
+      "method": "PATCH",
+      "path": "/proxies/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Proxy ID",
+          "required": true
+        },
+        {
+          "name": "auth",
+          "type": "bool",
+          "location": "body",
+          "description": "Auth"
+        },
+        {
+          "name": "host",
+          "type": "string",
+          "location": "body",
+          "description": "Host"
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password"
+        },
+        {
+          "name": "port",
+          "type": "int",
+          "location": "body",
+          "description": "Port"
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "location": "body",
+          "description": "Protocol"
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "location": "body",
+          "description": "Username"
+        }
+      ]
+    },
+    {
+      "name": "proxies_update-id",
+      "description": "Update proxy. Required: id, host, port, protocol. Optional: auth, password, username. Returns the updated UtilsApiResponseProxyModel.",
+      "method": "PUT",
+      "path": "/proxies/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Proxy ID",
+          "required": true
+        },
+        {
+          "name": "auth",
+          "type": "bool",
+          "location": "body",
+          "description": "Auth"
+        },
+        {
+          "name": "host",
+          "type": "string",
+          "location": "body",
+          "description": "Host",
+          "required": true
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password"
+        },
+        {
+          "name": "port",
+          "type": "int",
+          "location": "body",
+          "description": "Port",
+          "required": true
+        },
+        {
+          "name": "protocol",
+          "type": "string",
+          "location": "body",
+          "description": "Protocol",
+          "required": true
+        },
+        {
+          "name": "username",
+          "type": "string",
+          "location": "body",
+          "description": "Username"
+        }
+      ]
+    },
+    {
+      "name": "settings_delete",
+      "description": "Delete setting by key. Required: key. Returns the UtilsApiResponseAny. Destructive.",
+      "method": "DELETE",
+      "path": "/settings/key/{key}",
+      "params": [
+        {
+          "name": "key",
+          "type": "string",
+          "location": "path",
+          "description": "Setting Key",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "settings_get",
+      "description": "Get setting by key. Required: key. Returns the UtilsApiResponseSettingModel.",
+      "method": "GET",
+      "path": "/settings/key/{key}",
+      "params": [
+        {
+          "name": "key",
+          "type": "string",
+          "location": "path",
+          "description": "Setting Key",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "settings_update",
+      "description": "Set setting by key. Required: key, type. Optional: value. Returns the updated UtilsApiResponseSettingModel.",
+      "method": "PUT",
+      "path": "/settings/key/{key}",
+      "params": [
+        {
+          "name": "key",
+          "type": "string",
+          "location": "path",
+          "description": "Setting Key",
+          "required": true
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "location": "body",
+          "description": "Type",
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "location": "body",
+          "description": "Value"
+        }
+      ]
+    },
+    {
+      "name": "status-pages_create",
+      "description": "Create a new status page. Required: slug, title. Optional: auto_refresh_interval, custom_css, description (plus 12 more). Returns the new UtilsApiResponseStatusPageModel.",
+      "method": "POST",
+      "path": "/status-pages",
+      "params": [
+        {
+          "name": "auto_refresh_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Auto refresh interval"
+        },
+        {
+          "name": "custom_css",
+          "type": "string",
+          "location": "body",
+          "description": "Custom css"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "domains",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Domains"
+        },
+        {
+          "name": "footer_text",
+          "type": "string",
+          "location": "body",
+          "description": "Footer text"
+        },
+        {
+          "name": "google_analytics_tag_id",
+          "type": "string",
+          "location": "body",
+          "description": "Google analytics tag id"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "location": "body",
+          "description": "Icon"
+        },
+        {
+          "name": "monitor_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Monitor ids"
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password"
+        },
+        {
+          "name": "published",
+          "type": "bool",
+          "location": "body",
+          "description": "Published"
+        },
+        {
+          "name": "search_engine_index",
+          "type": "bool",
+          "location": "body",
+          "description": "Search engine index"
+        },
+        {
+          "name": "show_certificate_expiry",
+          "type": "bool",
+          "location": "body",
+          "description": "Show certificate expiry"
+        },
+        {
+          "name": "show_powered_by",
+          "type": "bool",
+          "location": "body",
+          "description": "Show powered by"
+        },
+        {
+          "name": "show_tags",
+          "type": "bool",
+          "location": "body",
+          "description": "Show tags"
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "location": "body",
+          "description": "Slug",
+          "required": true
+        },
+        {
+          "name": "theme",
+          "type": "string",
+          "location": "body",
+          "description": "Theme"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "location": "body",
+          "description": "Title",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "status-pages_delete",
+      "description": "Delete a status page. Required: id. Returns the UtilsApiResponseAny. Destructive.",
+      "method": "DELETE",
+      "path": "/status-pages/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Status Page ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "status-pages_get",
+      "description": "Get a status page by ID. Required: id. Returns the UtilsApiResponseStatusPageStatusPageWithMonitorsResponseDto.",
+      "method": "GET",
+      "path": "/status-pages/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Status Page ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "status-pages_get-statuspages",
+      "description": "Get a status page by domain name. Required: domain. Returns the UtilsApiResponseStatusPageModel.",
+      "method": "GET",
+      "path": "/status-pages/domain/{domain}",
+      "params": [
+        {
+          "name": "domain",
+          "type": "string",
+          "location": "path",
+          "description": "Domain Name",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "status-pages_get-statuspages-2",
+      "description": "Get a status page by slug. Required: slug. Returns the UtilsApiResponseStatusPageModel.",
+      "method": "GET",
+      "path": "/status-pages/slug/{slug}",
+      "params": [
+        {
+          "name": "slug",
+          "type": "string",
+          "location": "path",
+          "description": "Status Page Slug",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "status-pages_get-statuspages-3",
+      "description": "Get monitors for a status page by slug with heartbeats and uptime. Required: slug. Returns array of StatusPageMonitorWithHeartbeatsAndUptimeDto.",
+      "method": "GET",
+      "path": "/status-pages/slug/{slug}/monitors",
+      "params": [
+        {
+          "name": "slug",
+          "type": "string",
+          "location": "path",
+          "description": "Status Page Slug",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "status-pages_get-statuspages-4",
+      "description": "Get monitors for a status page by slug for homepage. Required: slug. Returns array of StatusPageMonitorWithHeartbeatsAndUptimeDto.",
+      "method": "GET",
+      "path": "/status-pages/slug/{slug}/monitors/homepage",
+      "params": [
+        {
+          "name": "slug",
+          "type": "string",
+          "location": "path",
+          "description": "Status Page Slug",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "status-pages_list",
+      "description": "Get all status pages. Optional: q, page (default: 0), limit (default: 10). Returns array of StatusPageModel.",
+      "method": "GET",
+      "path": "/status-pages",
+      "params": [
+        {
+          "name": "q",
+          "type": "string",
+          "location": "query",
+          "description": "Search query"
+        },
+        {
+          "name": "page",
+          "type": "int",
+          "location": "query",
+          "description": "Page number"
+        },
+        {
+          "name": "limit",
+          "type": "int",
+          "location": "query",
+          "description": "Items per page"
+        }
+      ]
+    },
+    {
+      "name": "status-pages_update",
+      "description": "Update a status page. Required: id. Optional: auto_refresh_interval, custom_css, description (plus 14 more). Returns the updated UtilsApiResponseStatusPageModel.",
+      "method": "PATCH",
+      "path": "/status-pages/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Status Page ID",
+          "required": true
+        },
+        {
+          "name": "auto_refresh_interval",
+          "type": "int",
+          "location": "body",
+          "description": "Auto refresh interval"
+        },
+        {
+          "name": "custom_css",
+          "type": "string",
+          "location": "body",
+          "description": "Custom css"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "domains",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Domains"
+        },
+        {
+          "name": "footer_text",
+          "type": "string",
+          "location": "body",
+          "description": "Footer text"
+        },
+        {
+          "name": "google_analytics_tag_id",
+          "type": "string",
+          "location": "body",
+          "description": "Google analytics tag id"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "location": "body",
+          "description": "Icon"
+        },
+        {
+          "name": "monitor_ids",
+          "type": "string_csv_array",
+          "location": "body",
+          "description": "Monitor ids"
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "location": "body",
+          "description": "Password"
+        },
+        {
+          "name": "published",
+          "type": "bool",
+          "location": "body",
+          "description": "Published"
+        },
+        {
+          "name": "search_engine_index",
+          "type": "bool",
+          "location": "body",
+          "description": "Search engine index"
+        },
+        {
+          "name": "show_certificate_expiry",
+          "type": "bool",
+          "location": "body",
+          "description": "Show certificate expiry"
+        },
+        {
+          "name": "show_powered_by",
+          "type": "bool",
+          "location": "body",
+          "description": "Show powered by"
+        },
+        {
+          "name": "show_tags",
+          "type": "bool",
+          "location": "body",
+          "description": "Show tags"
+        },
+        {
+          "name": "slug",
+          "type": "string",
+          "location": "body",
+          "description": "Slug"
+        },
+        {
+          "name": "theme",
+          "type": "string",
+          "location": "body",
+          "description": "Theme"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "location": "body",
+          "description": "Title"
+        }
+      ]
+    },
+    {
+      "name": "tags_create",
+      "description": "Create tag. Required: color, name. Optional: description. Returns the new UtilsApiResponseTagModel.",
+      "method": "POST",
+      "path": "/tags",
+      "params": [
+        {
+          "name": "color",
+          "type": "string",
+          "location": "body",
+          "description": "Color",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "tags_delete",
+      "description": "Delete tag. Required: id. Returns the UtilsApiResponseAny. Destructive.",
+      "method": "DELETE",
+      "path": "/tags/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Tag ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "tags_get",
+      "description": "Get tag by ID. Required: id. Returns the UtilsApiResponseTagModel.",
+      "method": "GET",
+      "path": "/tags/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Tag ID",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "tags_list",
+      "description": "Get tags. Optional: q, page (default: 0), limit (default: 10). Returns array of TagModel.",
+      "method": "GET",
+      "path": "/tags",
+      "params": [
+        {
+          "name": "q",
+          "type": "string",
+          "location": "query",
+          "description": "Search query"
+        },
+        {
+          "name": "page",
+          "type": "int",
+          "location": "query",
+          "description": "Page number"
+        },
+        {
+          "name": "limit",
+          "type": "int",
+          "location": "query",
+          "description": "Items per page"
+        }
+      ]
+    },
+    {
+      "name": "tags_update",
+      "description": "Update tag. Required: id. Optional: color, description, name. Returns the updated UtilsApiResponseTagModel.",
+      "method": "PATCH",
+      "path": "/tags/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Tag ID",
+          "required": true
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "location": "body",
+          "description": "Color"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name"
+        }
+      ]
+    },
+    {
+      "name": "tags_update-id",
+      "description": "Update tag. Required: id, color, name. Optional: description. Returns the updated UtilsApiResponseTagModel.",
+      "method": "PUT",
+      "path": "/tags/{id}",
+      "params": [
+        {
+          "name": "id",
+          "type": "string",
+          "location": "path",
+          "description": "Tag ID",
+          "required": true
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "location": "body",
+          "description": "Color",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "location": "body",
+          "description": "Description"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "location": "body",
+          "description": "Name",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

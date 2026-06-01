@@ -1,0 +1,23 @@
+# GoReleaser output
+/dist/
+
+# Build artifacts
+/build/
+/peekaping
+/peekaping-pp-cli
+/peekaping-pp-mcp
+*.mcpb
+
+# Local data / runtime
+*.db
+*.db-shm
+*.db-wal
+
+# Printing Press run evidence (not part of the source)
+/.manuscripts/
+dogfood-results.json
+workflow-verify-report.json
+.printing-press-pii-polish.json
+
+# OS / editor cruft
+.DS_Store
